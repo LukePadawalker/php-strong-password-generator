@@ -6,6 +6,10 @@
     animation: color 6s ease-in-out infinite;
 }
 
+.color-white {
+    color: white;
+}
+
 @keyframes color {
     0% {
         background-position: 0 50%;
@@ -23,6 +27,8 @@
 .h1 {
     color: white;
 }
+
+
 
 .alert {
     width: 100%;

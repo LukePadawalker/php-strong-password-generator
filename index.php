@@ -1,18 +1,9 @@
 <?php
+session_start();
 
-function randomPasswordGenerator($length)
-{
-    $character = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_';
-    $character_length = strlen($character);
-    $password = '';
+require_once(__DIR__ . "/functions.php");
 
-    for ($i = 0; $i < $length; $i++) {
-        $number = rand(0, $character_length - 1);
-        $password .= $character[$number];
-    }
-
-    return $password;
-}
+$showAlert = false;
 
 // Verifica se il modulo è stato inviato
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['password_length'])) {
@@ -21,12 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['password_length'])) {
     // Controlla se la lunghezza della password è valida
     if ($password_length > 0) {
         // Genera la password casuale
-        $password_casuale = randomPasswordGenerator($password_length);
+        $random_password = randomPasswordGenerator($password_length);
+        $_SESSION['random-password'] = $random_password;
 
-        // Mostra la password all'utente
-        echo '<p>La tua password casuale è: ' . htmlspecialchars($password_casuale) . '</p>';
+
+        header("Location: show_password.php");
     } else {
-        echo '<p>La lunghezza della password deve essere un numero positivo maggiore di 0.</p>';
+        $showAlert = true;
+
     }
 }
 
@@ -53,10 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['password_length'])) {
         <div class="container d-flex flex-column align-items-center pt-4">
             <div class="h1 pb-4 pt-4">Strong Password generator</div>
             <div class="h1 pb-4">Genera una password sicura</div>
-            <div class="alert alert-danger d-flex justify-content-center align-items-center mb-4" role="alert">
-                Nessun parametro valido inserito!
-            </div>
+            <?php
 
+            if ($showAlert) {
+                echo '<div class="alert alert-danger d-flex justify-content-center align-items-center mb-4" role="alert">
+                            Nessun parametro valido inserito!
+                        </div>';
+            }
+
+            ?>
 
             <form class="password-generator d-flex flex-column justify-content-start p-5" action="index.php"
                 method="get">
@@ -99,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['password_length'])) {
                     </div>
                 </div>
             </form>
-
 
 
         </div>
